@@ -14,6 +14,7 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class MainPageTest {
     MainPage mainPage = new MainPage();
+    ProductsPage productsPage = new ProductsPage();
 
     @BeforeAll
     public static void setUpAll() {
@@ -30,25 +31,23 @@ public class MainPageTest {
     public void search() {
         mainPage.searchButton.click();
 
-        $("[data-test='search-input']").sendKeys("Selenium");
-        $("button[data-test='full-search-button']").click();
+        mainPage.inputSearch("Selenium");
+        mainPage.fullSearchButton.click();
 
-        $("input[data-test='search-input']").shouldHave(attribute("value", "Selenium"));
+        assertEquals("Selenium", mainPage.fullSearchField.getValue(), "Search field should have Selenium in it.");
     }
 
     @Test
     public void toolsMenu() {
-        mainPage.toolsMenu.click();
+        mainPage.developerToolsMenuButton.click();
 
-        $x("//*[@id=\"js-site-header\"]/div/div/div[2]/div[1]/div/nav/div[1]/div/div").shouldBe(visible);
+        assertTrue(mainPage.developerToolsMenu.isDisplayed(), "Developer Tools menu should be visible.");
     }
 
     @Test
     public void navigationToAllTools() {
         mainPage.seeAllToolsButton.click();
 
-        $("#products-page").shouldBe(visible);
-
-        assertEquals("All Developer Tools and Products by JetBrains", Selenide.title());
+        assertTrue(productsPage.productsSelectionTable.isDisplayed(), "Products selection table is not displayed.");
     }
 }
